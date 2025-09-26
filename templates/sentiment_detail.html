@@ -1,0 +1,35 @@
+<!-- new/templates/sentiment_detail.html -->
+
+{% extends 'base.html' %}
+
+{% block title %}전체 문장 감성 분석{% endblock %}
+
+{% block content %}
+    <h2>"{{ analysis_result.title }}"</h2>
+    <h3>전체 문장 감성 분석 결과</h3>
+    
+    <div style="border: 1px solid #eee; border-radius: 5px; max-height: 500px; overflow-y: auto; margin-top: 20px;">
+        <ul style="list-style-type: none; padding: 15px;">
+            {% for item in analysis_result.sentiment_results %}
+                <li style="margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0;">
+                    <p style="margin: 0;">{{ item.sentence }}</p>
+                    
+                    <div style="display: flex; align-items: center; font-size: 0.9em; color: #555; margin-top: 5px;">
+                        <span style="width: 80px;">부정 확률:</span>
+                        <div style="flex-grow: 1; background-color: #e9ecef; border-radius: 5px; overflow: hidden;">
+                            
+                            <!-- ⭐️ 오류 해결: 뷰에서 미리 계산된 CSS 클래스 변수를 사용 -->
+                            <div class="sentiment-bar {{ item.bar_class }}" 
+                                 style="width: {{ item.negative_percentage }}%;">
+                                {{ item.negative_percentage }}%
+                            </div>
+
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <a href="{% url 'detail_page' %}?url={{ analysis_result.youtube_url|urlencode }}" class="button secondary-button" style="margin-top: 30px;">상세 결과로 돌아가기</a>
+{% endblock %}

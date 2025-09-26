@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}분석 결과 상세{% endblock %}
+
+{% block content %}
+    {% if analysis_result %}
+        <h2>"{{ analysis_result.title }}" 분석 결과</h2>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="{{ analysis_result.grade_image_path }}" alt="{{ analysis_result.grade_text }}" style="width: 150px; height: auto;">
+            <p style="font-size: 1.2em; font-weight: bold; margin-top: 10px;">{{ analysis_result.grade_text }}</p>
+        </div>
+
+        <h3>분석 요약</h3>
+        <p>
+            영상에서 <strong>{{ analysis_result.bad_word_count }}개의 유해 단어</strong>가 발견되었습니다.
+            또한, 전체 문장 중 <strong>{{ analysis_result.negative_sentence_count }}개의 문장에서 공격적이거나 부정적인 뉘앙스</strong>가 감지되었습니다.
+        </p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>주요 부정 문장 (부정 확률 80% 이상)</h3>
+            <a href="{% url 'sentiment_detail_page' transcription_id=analysis_result.id %}" class="button primary-button" style="width: auto; margin-top: 0;">
+                모든 문장 분석 보기
+            </a>
+        </div>
+        
+        {% if analysis_result.high_negative_sentences %}
+            <ul style="list-style-type: disc; padding-left: 20px;">
+            {% for item in analysis_result.high_negative_sentences %}
+                <li>"{{ item.sentence }}" <span style="color: red;">(부정 확률: {{ item.negative_percentage }}%)</span></li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>특별히 부정적인 뉘앙스의 문장은 발견되지 않았습니다.</p>
+        {% endif %}
+
+        <h3>검출된 유해 단어 목록</h3>
+        {% if analysis_result.found_bad_words %}
+            <p style="background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 5px;">
+                {{ analysis_result.found_bad_words|join:", " }}
+            </p>
+        {% else %}
+            <p>영상 자막에서 유해 단어가 발견되지 않았습니다.</p>
+        {% endif %}
+        
+        <hr style="margin: 30px 0;">
+
+        <h3>전체 변환 대본</h3>
+        <div style="background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto;">
+            <p style="white-space: pre-wrap; word-wrap: break-word;">{{ analysis_result.transcript }}</p>
+        </div>
+        
+        <p style="font-size: 0.9em; color: #888; margin-top: 15px;">
+            (분석 소요 시간: {{ analysis_result.elapsed_time }}초, 사용 모델: {{ analysis_result.model_name }})
+        </p>
+
+    {% elif error_message %}
+        <h2>오류 발생</h2>
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <a href="{% url 'youtube_analysis' %}" class="button secondary-button" style="margin-top: 30px;">다른 영상 분석하기</a>
+{% endblock %}

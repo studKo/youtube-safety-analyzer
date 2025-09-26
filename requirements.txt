@@ -1,0 +1,14 @@
+# 아래 명령어를 터미널에 입력하여 모든 라이브러리를 한 번에 설치할 수 있습니다.
+# pip install -r requirements.txt
+# 추가적으로 그래픽 카드가 노트북에 존재하면 아래의 명령어 실행 그러면 글카로 싱행함 없으면 하지마셈
+# 확인 방법 작업관리자 -> 성능 -> GPU (그래픽 카드가 존재하면 그래픽 카드 이름이 나옴, 엔비디아면 설치 ㄲ)
+#pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+
+Django==5.2.6
+openai-whisper
+torch
+numpy
+yt-dlp
+transformers
+sentencepiece
+kss

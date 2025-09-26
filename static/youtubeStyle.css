@@ -1,0 +1,135 @@
+html{
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    overflow-x: hidden;
+}
+
+header{
+    position: fixed;
+    top:0; left:0; right:0;
+    background: #fff;
+    padding:2rem 9%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    box-shadow: 0 .5rem 1rem rgba(0,0,0,.1);
+}
+
+header .navbar a{
+    font-size: 2rem;
+    padding:0 1.5rem;
+    color:#666;
+}
+
+header .navbar a:hover{
+    color:#000;
+}
+
+header #toggler{
+    display: none;
+}
+
+header .fas.fa-bars{
+    font-size: 3rem;
+    color: #333;
+    border-radius: .5rem;
+    padding: .5rem 1.5rem;
+    cursor: pointer;
+    border: .1rem solid rgba(0,0,0,.3);
+    display: none;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 30px;
+    margin-top: 100px;
+}
+
+input[type="text"], button {
+    padding: 10px;
+    font-size: 16px;
+    width: 300px;
+    margin: 5px;
+}
+#loader {
+    display: none;
+    font-size: 16px;
+    margin-top: 15px;
+}
+#grade-image img {
+    width: 500px;
+    margin: 30px 0;
+}
+#result-box {
+    margin-top: 20px;
+}
+#view-detail-btn {
+    display: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    margin-top: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+#view-detail-btn:hover {
+    background-color: #45a049;
+}
+
+#badWordCount {
+    font-size: 16px;
+}
+
+/* media queries */
+
+@media (max-width:991px) {
+
+    html{
+        font-size: 55%;
+    }
+
+    header{
+        padding:2rem;
+    }
+}
+
+@media (max-width:768px){
+
+    header .fas.fa-bars{
+        display: block;
+    }
+
+    header .navbar{
+        position:absolute;
+        top:100%; left:0; right:0;
+        background:#eee;
+        border-top: .1rem solid rgba(0,0,0,.1);
+        clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+    }
+
+    header #toggler:checked ~ .navbar{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    }
+
+    header .navbar a{
+        margin:1.5rem;
+        padding:1.5rem;
+        background:#fff;
+        border: .1rem solid rgba(0,0,0,.1);
+        display: block;
+    }
+}
+
+@media (max-width:450px) {
+
+    html{
+        font-size: 50%;
+    }
+}

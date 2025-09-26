@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}YouTube 유해성 분석{% endblock %}
+
+{% block content %}
+    <h2>YouTube 유해성 분석</h2>
+    <p>분석하고 싶은 YouTube 영상의 URL을 입력해주세요.</p>
+
+    <form id="youtube-url-form">
+        <input type="text" id="youtube-url" class="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
+        <button type="submit" class="button primary-button" style="margin-top: 15px;">분석 시작</button>
+    </form>
+
+    <div id="loading" style="display:none; margin-top: 20px;">
+        <p>분석 중입니다. 잠시만 기다려주세요...</p>
+    </div>
+
+    <div id="analysis-result">
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'transcribe.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,90 @@
+<!-- new/templates/base.html -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}유튜브 분석 서비스{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 20px;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            width: 100%;
+            max-width: 960px;
+            box-sizing: border-box;
+        }
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #333;
+        }
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        form input, form button {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .button {
+            display: inline-block;
+            padding: 12px 20px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 16px;
+            margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .primary-button { background-color: #007bff; }
+        .primary-button:hover { background-color: #0056b3; }
+        .secondary-button { background-color: #6c757d; margin-top: 15px; }
+        .secondary-button:hover { background-color: #5a6268; }
+        
+        /* ⭐️ 감성 분석 막대 그래프를 위한 CSS 클래스 */
+        .sentiment-bar {
+            height: 18px;
+            line-height: 18px;
+            color: white;
+            text-align: center;
+            border-radius: 3px; /* 약간의 둥근 모서리 추가 */
+            transition: width 0.5s ease-in-out; /* 너비 변경 시 애니메이션 효과 */
+        }
+        .sentiment-bar-red { background-color: #dc3545; }
+        .sentiment-bar-yellow { background-color: #ffc107; }
+        .sentiment-bar-green { background-color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
