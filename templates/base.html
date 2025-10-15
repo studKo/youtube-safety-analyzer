@@ -1,5 +1,3 @@
-<!-- new/templates/base.html -->
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="ko">
@@ -65,15 +63,39 @@
         .primary-button:hover { background-color: #0056b3; }
         .secondary-button { background-color: #6c757d; margin-top: 15px; }
         .secondary-button:hover { background-color: #5a6268; }
+
+        .toggle-buttons {
+            display: flex;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #ccc;
+        }
+        .model-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            font-size: 15px;
+            color: #555;
+            transition: background-color 0.2s;
+        }
+        .model-btn:not(:last-child) {
+            border-right: 1px solid #ccc;
+        }
+        .model-btn.active {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
         
-        /* ⭐️ 감성 분석 막대 그래프를 위한 CSS 클래스 */
         .sentiment-bar {
             height: 18px;
             line-height: 18px;
             color: white;
             text-align: center;
-            border-radius: 3px; /* 약간의 둥근 모서리 추가 */
-            transition: width 0.5s ease-in-out; /* 너비 변경 시 애니메이션 효과 */
+            border-radius: 3px;
+            transition: width 0.5s ease-in-out;
         }
         .sentiment-bar-red { background-color: #dc3545; }
         .sentiment-bar-yellow { background-color: #ffc107; }
@@ -82,6 +104,17 @@
 </head>
 <body>
     <div class="container">
+        <div style="text-align: right; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+            {% if user.is_authenticated %}
+                <span>환영합니다, <strong>{{ user.username }}</strong>님!</span>
+                <a href="{% url 'home' %}" style="margin-left: 15px; text-decoration: none; color: #007bff;">분석하기</a>
+                <a href="{% url 'accounts:mypage' %}" style="margin-left: 15px; text-decoration: none; color: #007bff;">마이페이지</a>
+                <a href="{% url 'accounts:logout' %}" style="margin-left: 15px; text-decoration: none; color: #dc3545;">로그아웃</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" style="text-decoration: none; color: #007bff;">로그인</a>
+                <a href="{% url 'accounts:register' %}" style="margin-left: 15px; text-decoration: none; color: #007bff;">회원가입</a>
+            {% endif %}
+        </div>
         {% block content %}
         {% endblock %}
     </div>

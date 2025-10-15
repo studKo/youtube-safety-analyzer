@@ -13,8 +13,8 @@
 
         <h3>분석 요약</h3>
         <p>
-            영상에서 <strong>{{ analysis_result.bad_word_count }}개의 유해 단어</strong>가 발견되었습니다.
-            또한, 전체 문장 중 <strong>{{ analysis_result.negative_sentence_count }}개의 문장에서 공격적이거나 부정적인 뉘앙스</strong>가 감지되었습니다.
+            영상에서 계산된 **총 유해성 점수는 {{ analysis_result.bad_word_score }}점**입니다.
+            또한, 전체 문장 중 **{{ analysis_result.negative_sentence_count }}개의 문장에서 공격적이거나 부정적인 뉘앙스**가 감지되었습니다.
         </p>
         
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -36,9 +36,15 @@
 
         <h3>검출된 유해 단어 목록</h3>
         {% if analysis_result.found_bad_words %}
-            <p style="background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 5px;">
-                {{ analysis_result.found_bad_words|join:", " }}
-            </p>
+            <ul style="list-style-type: none; padding-left: 0;">
+            {% for word, details in analysis_result.found_bad_words.items %}
+                <li style="background-color: #f9f9f9; border: 1px solid #eee; padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                    <strong>{{ word }}</strong> 
+                    <span style="color: red; font-weight: bold;">({{ details.count }}회)</span>
+                    - 종류: {{ details.category }} (가중치: {{ details.weight }})
+                </li>
+            {% endfor %}
+            </ul>
         {% else %}
             <p>영상 자막에서 유해 단어가 발견되지 않았습니다.</p>
         {% endif %}
@@ -46,7 +52,7 @@
         <hr style="margin: 30px 0;">
 
         <h3>전체 변환 대본</h3>
-        <div style="background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto;">
+        <div id="transcript-container" style="background-color: #f9f9f9; border: 1px solid #eee; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto;">
             <p style="white-space: pre-wrap; word-wrap: break-word;">{{ analysis_result.transcript }}</p>
         </div>
         
@@ -59,5 +65,37 @@
         <p style="color: red;">{{ error_message }}</p>
     {% endif %}
 
-    <a href="{% url 'youtube_analysis' %}" class="button secondary-button" style="margin-top: 30px;">다른 영상 분석하기</a>
+    <a href="{% url 'home' %}" class="button secondary-button" style="margin-top: 30px;">다른 영상 분석하기</a>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        const transcriptContainer = document.getElementById('transcript-container');
+        if (!transcriptContainer) return;
+
+        const transcriptParagraph = transcriptContainer.querySelector('p');
+        const badWords = JSON.parse('{{ analysis_result.bad_words_json|safe }}');
+
+        if (transcriptParagraph && badWords && badWords.length > 0) {
+            let originalTranscript = transcriptParagraph.innerHTML;
+
+            // 정규 표현식 생성 (특수문자 이스케이프 처리)
+            // 단어 경계(\b)를 제거하여 '새끼.' 와 같이 문장부호가 붙은 경우도 찾아내도록 수정
+            const escapedWords = badWords.map(word => word.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"));
+            const regex = new RegExp(`(${escapedWords.join('|')})`, 'gi');
+
+            // 텍스트를 순회하며 <mark> 태그로 감싸기
+            const highlightedTranscript = originalTranscript.replace(regex, (match) => {
+                return `<mark style="background-color: #ffdce0; padding: 2px 0; border-radius: 3px; font-weight: bold;">${match}</mark>`;
+            });
+
+            transcriptParagraph.innerHTML = highlightedTranscript;
+        }
+    } catch (e) {
+        console.error("하이라이팅 스크립트 오류:", e);
+    }
+});
+</script>
 {% endblock %}

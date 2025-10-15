@@ -4,30 +4,56 @@ import whisper
 import torch
 from django.apps import apps
 from .sentiment_analyzer import analyze_sentiment
+from .models import BadWord # DB에서 유해 단어를 가져오기 위해 추가
+import re
+from collections import Counter
 
-BAD_WORDS = [
-    "시발", "새끼", "개새끼", "병신", "존나", "지랄", "미친", "미친년", "씨발", "씨발년", "개자식", "닥쳐", "등신", "좆", "씹",
-    "좆까", "좆밥", "돌대가리", "쓰레기", "애미", "애비", "쌍놈", "년", "련", "또라이", "놈", "썅", "염병",
-    "옘병", "닥치라", "꺼져", "꼰대", "개같은", "개가튼", "호로새끼", "씹새끼", "씨팔", "씨부랄", "씨댕",
-    "씨바", "미친놈", "미친년", "똘추", "개놈", "개년", "씨방", "병맛", "게같은","게같은년",
-    "개자식년", "개자슥", "개자슥년", "개같은년","연병",
-    "썅놈", "썅년", "썅년이", "썅놈이", "좆만한", "개소리",
-]
-
-def transcribe_audio(audio_path):
+def transcribe_audio(audio_path, sentiment_model_name):
+    """
+    오디오 파일을 분석하여 텍스트, 유해 단어 정보, 감성 분석 결과를 반환합니다.
+    """
     model = apps.get_app_config('youtube_analysis').model
     if model is None:
         raise RuntimeError("Whisper 모델이 로드되지 않았습니다.")
 
     try:
-        result = model.transcribe(audio_path, fp16=torch.cuda.is_available()) # GPU 사용 시 fp16 활성화
+        # 1. 음성-텍스트 변환
+        result = model.transcribe(audio_path, fp16=torch.cuda.is_available())
         transcript = result.get("text", "").strip()
+        transcript_lower = transcript.lower()
+
+        # 2. DB에서 모든 유해 단어 정보 가져오기
+        bad_words_from_db = BadWord.objects.all()
         
-        bad_word_count = sum(transcript.lower().count(word) for word in BAD_WORDS)
-        sentiment_results = analyze_sentiment(transcript)
+        # 3. 유해 단어 검출 및 상세 정보 계산
+        found_words_details = {}
+        total_score = 0
         
-        return transcript, bad_word_count, sentiment_results, "whisper-medium"
+        # 텍스트를 단어 단위로 분리 (정규표현식 사용)
+        words_in_transcript = re.findall(r'\b\w+\b', transcript_lower)
+        word_counts = Counter(words_in_transcript)
+
+        for bad_word in bad_words_from_db:
+            word = bad_word.word.lower()
+            # Counter를 사용하여 단어의 등장 횟수를 효율적으로 계산
+            if word_counts[word] > 0:
+                count = word_counts[word]
+                found_words_details[bad_word.word] = {
+                    'count': count,
+                    'category': bad_word.get_category_display(), # 'profanity' -> '욕설/비속어'
+                    'weight': bad_word.weight
+                }
+                total_score += count * bad_word.weight
+        
+        # 4. 감성 분석 수행 (이 부분은 변경 없음)
+        sentiment_results = analyze_sentiment(transcript, model_name=sentiment_model_name)
+        
+        whisper_model_name = "whisper-medium"
+        full_model_name = f"{whisper_model_name} + {sentiment_model_name}"
+        
+        # 5. 상세 결과 반환
+        return transcript, found_words_details, total_score, sentiment_results, full_model_name
 
     except Exception as e:
-        print("❌ 분석 중 예외 발생:", e)
+        print(f"❌ 분석 중 예외 발생: {e}")
         raise e

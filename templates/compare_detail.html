@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}모델별 비교 분석{% endblock %}
+
+{% block content %}
+    {% if kcbert_result and roberta_result %}
+        <h2>"{{ title }}" 비교 분석 결과</h2>
+        <p>두 AI 감성 분석 모델이 동일한 영상에 대해 어떻게 다르게 분석했는지 비교해볼 수 있습니다.</p>
+        
+        <div class="comparison-container" style="display: flex; gap: 20px; margin-top: 30px;">
+            
+            <div class="result-column" style="flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+                <h3 style="text-align: center; color: #007bff; margin-top: 0;">KcBERT (댓글/비속어 특화)</h3>
+                <hr>
+                
+                <h4>분석 요약</h4>
+                <p><strong>예상 등급:</strong> {{ kcbert_result.grade_text }}</p>
+                <p><strong>유해성 점수:</strong> {{ kcbert_result.bad_word_score }}점</p>
+                <p><strong>부정 문장 수:</strong> {{ kcbert_result.negative_sentence_count }}개</p>
+
+                <h4>검출된 유해 단어</h4>
+                {% if kcbert_result.found_bad_words %}
+                    <ul>
+                    {% for word, details in kcbert_result.found_bad_words.items %}
+                        <li><strong>{{ word }}</strong> ({{ details.count }}회) - {{ details.category }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>유해 단어 없음</p>
+                {% endif %}
+            </div>
+
+            <div class="result-column" style="flex: 1; border: 1px solid #ddd; border-radius: 8px; padding: 20px;">
+                <h3 style="text-align: center; color: #28a745; margin-top: 0;">KLUE-RoBERTa (범용/표준어)</h3>
+                <hr>
+                
+                <h4>분석 요약</h4>
+                <p><strong>예상 등급:</strong> {{ roberta_result.grade_text }}</p>
+                <p><strong>유해성 점수:</strong> {{ roberta_result.bad_word_score }}점</p>
+                <p><strong>부정 문장 수:</strong> {{ roberta_result.negative_sentence_count }}개</p>
+
+                <h4>검출된 유해 단어</h4>
+                {% if roberta_result.found_bad_words %}
+                    <ul>
+                    {% for word, details in roberta_result.found_bad_words.items %}
+                        <li><strong>{{ word }}</strong> ({{ details.count }}회) - {{ details.category }}</li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>유해 단어 없음</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+    {% elif error_message %}
+        <h2>오류 발생</h2>
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    <a href="{% url 'accounts:mypage' %}" class="button secondary-button" style="margin-top: 30px;">마이페이지로 돌아가기</a>
+{% endblock %}

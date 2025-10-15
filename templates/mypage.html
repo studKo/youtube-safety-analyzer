@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}마이페이지{% endblock %}
+
+{% block content %}
+    <h2>{{ user.username }}님의 분석 기록</h2>
+
+    {% if processed_list %}
+        <p>총 {{ processed_list|length }}개의 분석 기록(묶음)이 있습니다.</p>
+        <div style="margin-top: 20px;">
+            <ul style="list-style-type: none; padding: 0;">
+                {% for item in processed_list %}
+                    <li style="background-color: #f9f9f9; border: 1px solid #eee; padding: 20px; border-radius: 8px; margin-bottom: 15px;">
+                        {% if item.is_comparison %}
+                            <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 1.2em;">{{ item.title }}</h4>
+                            <p style="font-size: 0.9em; color: #555; margin-bottom: 15px; line-height: 1.6;">
+                                <strong>URL:</strong> {{ item.youtube_url }}<br>
+                                <strong style="color: green;">✓ 두 모델 비교 가능</strong><br>
+                                <strong>분석일:</strong> {{ item.created_at|date:"Y-m-d H:i" }}
+                            </p>
+                            <a href="{% url 'compare_page' %}?kcbert_id={{ item.kcbert_id }}&roberta_id={{ item.roberta_id }}" class="button primary-button" style="background-color: #28a745; width: auto; padding: 8px 15px; font-size: 14px;">
+                                비교 분석 보기
+                            </a>
+                        {% else %}
+                            {% with trans=item.transcription %}
+                                <h4 style="margin-top: 0; margin-bottom: 10px; font-size: 1.2em;">{{ trans.title }}</h4>
+                                <p style="font-size: 0.9em; color: #555; margin-bottom: 15px; line-height: 1.6;">
+                                    <strong>URL:</strong> {{ trans.youtube_url }}<br>
+                                    <strong>분석 모델:</strong> {{ trans.model_name }}<br>
+                                    <strong>분석일:</strong> {{ trans.created_at|date:"Y-m-d H:i" }}
+                                </p>
+                                <a href="{% url 'detail_page' %}?url={{ trans.youtube_url|urlencode }}" class="button primary-button" style="width: auto; padding: 8px 15px; font-size: 14px;">결과 다시 보기</a>
+                            {% endwith %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p style="margin-top: 20px;">아직 분석한 기록이 없습니다. 지금 바로 영상을 분석해보세요!</p>
+        <a href="{% url 'home' %}" class="button secondary-button" style="margin-top: 20px; width: auto;">분석 페이지로 이동</a>
+    {% endif %}
+{% endblock %}

@@ -4,8 +4,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.youtube_page, name='youtube_analysis'),
-    path('detail/', views.detail_page, name='detail_page'),
+    # 기존 URL 패턴들
     path('api/analyze/', views.analyze_api, name='analyze_api'),
-    path('sentiment/<int:transcription_id>/', views.sentiment_detail_view, name='sentiment_detail_page'),
+    path('detail/', views.detail_page, name='detail_page'),
+    path('sentiment-detail/<int:transcription_id>/', views.sentiment_detail_view, name='sentiment_detail_page'),
+    path('compare/', views.compare_page, name='compare_page'),
 ]

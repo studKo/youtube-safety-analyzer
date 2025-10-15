@@ -5,19 +5,36 @@
 
 {% block content %}
     <h2>YouTube 유해성 분석</h2>
-    <p>분석하고 싶은 YouTube 영상의 URL을 입력해주세요.</p>
+    <p>분석하고 싶은 YouTube 영상의 URL을 입력하거나, '파일 찾기'를 통해 로컬 비디오/오디오 파일을 선택해주세요.</p>
 
-    <form id="youtube-url-form">
-        <input type="text" id="youtube-url" class="url-input" placeholder="https://www.youtube.com/watch?v=..." required>
-        <button type="submit" class="button primary-button" style="margin-top: 15px;">분석 시작</button>
+    <form id="youtube-url-form" enctype="multipart/form-data">
+        <div class="input-group" style="display: flex; gap: 10px; align-items: center; margin-bottom: 15px;">
+            <button type="button" id="file-explorer-btn" class="button secondary-button" style="width: auto; margin-top: 0;">파일 찾기</button>
+            <input type="file" id="video-file-input" accept="video/*, audio/*" style="display: none;">
+            <input type="text" id="youtube-url" class="url-input" placeholder="URL 입력 또는 파일 선택" required style="flex-grow: 1; margin: 0;">
+        </div>
+
+        <div class="model-selector" style="margin-top: 20px; margin-bottom: 15px;">
+            <p style="margin-bottom: 10px; font-weight: bold; color: #333;">감성 분석 모델 선택:</p>
+            <div class="toggle-buttons">
+                <button type="button" class="model-btn active" id="beomi/kcbert-large">
+                    KcBERT (댓글/비속어 특화)
+                </button>
+                <button type="button" class="model-btn" id="klue/roberta-large">
+                    KLUE-RoBERTa (범용/표준어)
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" class="button primary-button">분석 시작</button>
     </form>
 
     <div id="loading" style="display:none; margin-top: 20px;">
-        <p>분석 중입니다. 잠시만 기다려주세요...</p>
+        <p id="loading-status">분석을 준비하는 중...</p>
+        <p style="font-size: 0.9em; color: #888;">(Whisper 모델 로딩 및 분석에 수 분이 소요될 수 있습니다)</p>
     </div>
 
-    <div id="analysis-result">
-        </div>
+    <div id="analysis-result"></div>
 {% endblock %}
 
 {% block extra_js %}

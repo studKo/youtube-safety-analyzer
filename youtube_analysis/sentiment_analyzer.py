@@ -2,44 +2,58 @@
 
 from transformers import pipeline
 import kss
+import re # 정규표현식 모듈 추가
 
-sentiment_classifier = None
+sentiment_classifiers = {}
 
 def initialize_sentiment_analyzer():
-    """
-    Django 앱 시작 시 감성 분석 모델을 한 번만 로드합니다.
-    """
-    global sentiment_classifier
-    if sentiment_classifier is None:
-        print("✅ 감성 분석 전문 모델(klue/roberta-large) 로드를 시작합니다...")
-        
-        sentiment_classifier = pipeline(
-            "sentiment-analysis", 
-            model="klue/roberta-large",
-            top_k=None
-        )
-        print("✅ 감성 분석 모델 로드 완료")
+    global sentiment_classifiers
+    if not sentiment_classifiers:
+        models_to_load = ["klue/roberta-large", "beomi/kcbert-large"]
+        for model_name in models_to_load:
+            print(f"✅ 감성 분석 모델 ({model_name}) 로드를 시작합니다...")
+            try:
+                sentiment_classifiers[model_name] = pipeline(
+                    "sentiment-analysis", 
+                    model=model_name,
+                    top_k=None
+                )
+                print(f"✅ {model_name} 모델 로드 완료")
+            except Exception as e:
+                print(f"❌ {model_name} 모델 로드 실패: {e}")
 
-def analyze_sentiment(text):
+def analyze_sentiment(text, model_name="klue/roberta-large"):
     """
-    전체 텍스트를 문장 단위로 나누고, 모든 문장을 한 번에 감성 분석합니다. (배치 처리)
+    지정된 모델을 사용하여 감성 분석을 수행합니다.
+    (내부적으로 한글만 필터링하여 분석합니다.)
     """
-    if sentiment_classifier is None:
-        raise RuntimeError("감성 분석 모델이 초기화되지 않았습니다.")
+    classifier = sentiment_classifiers.get(model_name)
+    if classifier is None:
+        raise RuntimeError(f"{model_name} 모델이 초기화되지 않았습니다.")
 
     try:
-        # 문장 분리
-        sentences = [s.strip() for s in text.replace('?', '.').replace('!', '.').split('.') if s.strip()]
+        # ▼▼▼▼▼▼ 감성 분석 전, 한글만 남기는 전처리 로직 강화 ▼▼▼▼▼▼
+        # 1. 영어 알파벳 제거
+        korean_text_only = re.sub(r'[a-zA-Z]', '', text)
+        # 2. 한글, 숫자, 기본 구두점을 제외한 모든 문자 공백으로 변환
+        korean_text_only = re.sub(r'[^가-힣0-9?.!]', ' ', korean_text_only)
+
+        # 3. kss를 사용하여 문장 분리
+        sentences = kss.split_sentences(korean_text_only)
+        
+        # 4. 비어있는 문장 최종 제거
+        sentences = [s.strip() for s in sentences if s.strip()]
+        # ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
         if not sentences:
             return []
+            
     except Exception:
-        sentences = [text]
+        sentences = [text] # 오류 발생 시 원본 텍스트 사용
 
-    # 문장 리스트 전체를 모델에 한 번에 전달하여 분석 속도 향상
-    all_scores = sentiment_classifier(sentences)
+    all_scores = classifier(sentences)
     
     results = []
-    # 분석된 결과와 원래 문장을 짝지어 최종 결과 리스트 생성
     for i, sentence in enumerate(sentences):
         scores = all_scores[i]
         negative_score = next((item['score'] for item in scores if item['label'].upper() == 'NEGATIVE' or item['label'] == 'LABEL_0'), 0)
