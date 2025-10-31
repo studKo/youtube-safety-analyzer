@@ -22,9 +22,12 @@ class YoutubeAnalysisConfig(AppConfig):
                 print("⚠️ [경고] NVIDIA GPU('cuda')를 찾을 수 없습니다. CPU를 사용하여 모델을 로드합니다. (속도 저하)")
 
             try:
-                # 시연을 위해 "base" 모델 사용, 실제 운영 시 "medium"으로 변경 권장
-                self.model = whisper.load_model("base", device=device)
-                print(f"✅ Whisper '{device}' 모델 로드 완료")
+                #  시연을 위해 "base" 모델 사용, 실제 운영 시 "medium"으로 변경 권장
+                model_name = "medium" #  로드할 모델 이름을 변수로 지정
+                self.model = whisper.load_model(model_name, device=device)
+                
+                #  print 구문이 모델 이름과 장치를 모두 표시하도록 변경
+                print(f"✅ Whisper '{model_name}' 모델 로드 완료 (Device: {device})")
                 
                 initialize_sentiment_analyzer()
                 
