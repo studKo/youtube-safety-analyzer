@@ -66,4 +66,4 @@ venv/
 media/
 
 # ⭐️ 환경변수 파일 제외
-.env
+.env"verified_data.csv" 
