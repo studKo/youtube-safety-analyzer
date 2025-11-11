@@ -15,3 +15,5 @@ yt-dlp
 transformers
 sentencepiece
 kss
+datasets
+scikit-learn
