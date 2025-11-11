@@ -4,7 +4,7 @@
 # 확인 방법 작업관리자 -> 성능 -> GPU (그래픽 카드가 존재하면 그래픽 카드 이름이 나옴, 엔비디아면 설치 ㄲ)
 #pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 #git add .
-#git commit -m "2: 욕설 점수 반영"
+#git commit -m "3: train "
 #git push origin main
 
 Django==5.2.6
