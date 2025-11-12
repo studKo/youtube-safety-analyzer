@@ -66,7 +66,7 @@ def detail_page(request):
         high_negative_sentences = []
         if result.sentiment_results:
             for sentence_data in result.sentiment_results:
-                if sentence_data.get('negative_score', 0) > 0.8:
+                if sentence_data.get('negative_score', 0) > 0.6:
                     sentence_data['negative_percentage'] = int(sentence_data['negative_score'] * 100)
                     high_negative_sentences.append(sentence_data)
         analysis_result['high_negative_sentences'] = high_negative_sentences

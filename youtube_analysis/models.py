@@ -27,11 +27,18 @@ class Transcription(models.Model):
     found_bad_words = models.JSONField(null=True, blank=True, default=dict)
     bad_word_score = models.IntegerField(default=0, verbose_name='유해 단어 점수')
     sentiment_results = models.JSONField(null=True, blank=True)
-    negative_sentence_count = models.IntegerField(default=0)
+    
+    # --- [수정됨] 지난번 오류(NOT NULL) 해결을 위한 필드 ---
+    positive_sentence_count = models.IntegerField(default=0) # 긍정 문장 수
+    negative_sentence_count = models.IntegerField(default=0) # 부정 문장 수
+    neutral_sentence_count = models.IntegerField(default=0)  # 중립 문장 수
+    # ----------------------------------------------------
+
     elapsed_time = models.FloatField(default=0.0)
     model_name = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_verified = models.BooleanField(default=False, verbose_name='관리자 검수 완료')
+    
     def __str__(self):
         return self.title
 
@@ -56,7 +63,12 @@ class VerifiedSentence(models.Model):
     
     transcription = models.ForeignKey(Transcription, on_delete=models.CASCADE, related_name='verified_sentences')
     original_sentence = models.TextField(verbose_name='원본 문장')
+
+    # --- [수정] makemigrations 문제를 해결하기 위해 누락된 필드 추가 ---
+    ai_positive_score = models.FloatField(default=0.0, verbose_name='AI 긍정 확률')
     ai_negative_score = models.FloatField(default=0.0, verbose_name='AI 부정 확률')
+    ai_neutral_score = models.FloatField(default=0.0, verbose_name='AI 중립 확률')
+    # -------------------------------------------------------------
     
     human_verification = models.CharField(
         max_length=10, 
