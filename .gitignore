@@ -59,11 +59,8 @@ local_settings.py
 db.sqlite3
 db.sqlite3-journal
 
-# ⭐️ 가상환경 폴더 제외
+# 가상환경 폴더 제외
 venv/
 
-# ⭐️ 미디어 파일(사용자 업로드) 제외
+# 미디어 파일(사용자 업로드) 제외
 media/
-
-# ⭐️ 환경변수 파일 제외
-.env"verified_data.csv" 

@@ -1,0 +1,172 @@
+=========================================================
+[실제 학습] 캡스톤 프로젝트 모델 학습 로그 (2025-11-14 01:49:53)
+사용 장치: cuda
+=========================================================
+
+--- [beomi/kcbert-large / OVERSAMPLING / 학습 전 (Pre-trained) - Test Set] 평가 결과 ---
+  [정확도]: 0.3074
+  [F1-Score (Weighted)]: 0.2897
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 12         50         41        
+negative(실제) 21         42         40        
+positive(실제) 11         51         41        
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [beomi/kcbert-large / OVERSAMPLING / 학습 후 (Fine-tuned) - Validation Set] 평가 결과 ---
+  [정확도]: 0.9094
+  [F1-Score (Weighted)]: 0.9080
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 85         11         7         
+negative(실제) 8          93         2         
+positive(실제) 0          0          103       
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [beomi/kcbert-large / OVERSAMPLING / ★ 최종 성능 (Fine-tuned) - Test Set ★] 평가 결과 ---
+  [정확도]: 0.8997
+  [F1-Score (Weighted)]: 0.8989
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 90         8          5         
+negative(실제) 15         86         2         
+positive(실제) 1          0          102       
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [klue/roberta-large / OVERSAMPLING / 학습 전 (Pre-trained) - Test Set] 평가 결과 ---
+  [정확도]: 0.3333
+  [F1-Score (Weighted)]: 0.1667
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 0          0          103       
+negative(실제) 0          0          103       
+positive(실제) 0          0          103       
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [klue/roberta-large / OVERSAMPLING / 학습 후 (Fine-tuned) - Validation Set] 평가 결과 ---
+  [정확도]: 0.3333
+  [F1-Score (Weighted)]: 0.1667
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 103        0          0         
+negative(실제) 103        0          0         
+positive(실제) 103        0          0         
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [klue/roberta-large / OVERSAMPLING / ★ 최종 성능 (Fine-tuned) - Test Set ★] 평가 결과 ---
+  [정확도]: 0.3333
+  [F1-Score (Weighted)]: 0.1667
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 103        0          0         
+negative(실제) 103        0          0         
+positive(실제) 103        0          0         
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [beomi/kcbert-large / UNDERSAMPLING / 학습 전 (Pre-trained) - Test Set] 평가 결과 ---
+  [정확도]: 0.3056
+  [F1-Score (Weighted)]: 0.2897
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 5          14         5         
+negative(실제) 4          13         7         
+positive(실제) 0          20         4         
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [beomi/kcbert-large / UNDERSAMPLING / 학습 후 (Fine-tuned) - Validation Set] 평가 결과 ---
+  [정확도]: 0.4085
+  [F1-Score (Weighted)]: 0.3142
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 0          22         1         
+negative(실제) 0          22         2         
+positive(실제) 0          17         7         
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [beomi/kcbert-large / UNDERSAMPLING / ★ 최종 성능 (Fine-tuned) - Test Set ★] 평가 결과 ---
+  [정확도]: 0.4167
+  [F1-Score (Weighted)]: 0.3137
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 0          21         3         
+negative(실제) 0          23         1         
+positive(실제) 0          17         7         
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [klue/roberta-large / UNDERSAMPLING / 학습 전 (Pre-trained) - Test Set] 평가 결과 ---
+  [정확도]: 0.3333
+  [F1-Score (Weighted)]: 0.1667
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 0          0          24        
+negative(실제) 0          0          24        
+positive(실제) 0          0          24        
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [klue/roberta-large / UNDERSAMPLING / 학습 후 (Fine-tuned) - Validation Set] 평가 결과 ---
+  [정확도]: 0.3380
+  [F1-Score (Weighted)]: 0.1708
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 0          0          23        
+negative(실제) 0          0          24        
+positive(실제) 0          0          24        
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
+
+--- [klue/roberta-large / UNDERSAMPLING / ★ 최종 성능 (Fine-tuned) - Test Set ★] 평가 결과 ---
+  [정확도]: 0.3333
+  [F1-Score (Weighted)]: 0.1667
+
+  [혼동 행렬 (Confusion Matrix)]:
+          neutral(예측) negative(예측) positive(예측)
+          ---------------------------------
+neutral(실제) 0          0          24        
+negative(실제) 0          0          24        
+positive(실제) 0          0          24        
+
+  [분석 요약]:
+  - 모델이 3개의 레이블['neutral', 'negative', 'positive']을 기반으로 평가되었습니다.
